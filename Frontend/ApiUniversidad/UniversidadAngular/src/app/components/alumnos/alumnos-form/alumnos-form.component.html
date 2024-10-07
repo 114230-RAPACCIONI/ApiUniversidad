@@ -1,0 +1,36 @@
+<!-- <div class="container">
+    <form #form="ngForm" (ngSubmit)="sendForm(form)" class="row g-3 container">
+        <h1>Datos del alumno</h1>
+        <div class="col-md-4">
+            <label for="validationCustom01" class="form-label">Nombre:</label>
+            <input #nombre="ngModel"
+                [ngClass]="{'is-invalid': nombre.invalid  && (nombre.dirty || nombre.touched),'is-valid': nombre.valid }"
+                type="text" class="form-control" name="nombre" [(ngModel)]="alumno.nombre" required minlength="3">
+            @if(nombre.invalid && (nombre.dirty || nombre.touched)){
+            @if(nombre.getError('minlength')) {
+            <div class="text-danger">El nombre es obligatorio</div>
+            }@else{
+            <div class="text-danger">Debe contener como minimo 3 caracteres.</div>
+            }}
+        </div>
+        <div class="col-md-4">
+            <label for="validationCustom02" class="form-label">Apellido:</label>
+            <input #apellido="ngModel" type="text" class="form-control" name="apellido" [(ngModel)]="alumno.apellido"
+                required>
+            @if(apellido.getError('required') && apellido.dirty){
+            <div class="text-danger">El apellido es obligatorio.</div>
+            }
+        </div>
+        <div class="col-md-4">
+            <label for="validationCustom02" class="form-label">Legajo:</label>
+            <input #legajo="ngModel" type="text" class="form-control" name="legajo" [(ngModel)]="alumno.legajo"
+                required>
+            @if(legajo.getError('required') && legajo.dirty){
+            <div class="text-danger">El legajo es obligatorio.</div>
+            }
+        </div>
+        <div>
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </div>
+    </form>
+</div> -->

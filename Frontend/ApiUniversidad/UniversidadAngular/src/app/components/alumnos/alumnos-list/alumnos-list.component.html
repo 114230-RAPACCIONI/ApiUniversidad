@@ -1,0 +1,32 @@
+<div class="container">
+  @if (alumnos.length > 0) {
+    <hr>
+  <div>
+    <h2>Lista de Alumnos</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Legajo</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(al of alumnos; track $index){
+        <tr>
+          <th scope="row">{{ $index +1 }}</th>
+          <td>{{ al.apellido }} {{ al.nombre }}</td>
+          <td>{{ al.legajo }}</td>
+          <td>
+            <button class="btn btn-primary me-2" [routerLink]="['/alumnos', al.id]">Editar</button>
+            <button type="button" class="btn btn-danger me-2" (click)="eliminarAlumno(al.id)">Eliminar</button>
+            <button type="button" class="btn btn-info" [routerLink]="['/detail', al.id]">Ver</button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  }
+</div>

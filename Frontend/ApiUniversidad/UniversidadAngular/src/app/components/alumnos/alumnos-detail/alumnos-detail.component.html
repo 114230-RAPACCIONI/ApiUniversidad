@@ -1,0 +1,38 @@
+<div class="container">
+    <h2>Detalles del Alumno</h2>
+  
+    <div *ngIf="alumno">
+      <p><strong>Nombre y Apellido:</strong> {{ alumno.nombre }} {{ alumno.apellido }}</p>
+      <p><strong>Legajo:</strong> {{ alumno.legajo }}</p>
+      <p><strong>Fecha de Alta:</strong> {{ alumno.fechaAlta | date }}</p>
+      
+      <!-- Información del Rol -->
+      <div *ngIf="alumno.idRolNavigation.alumnos">
+        <h3>Rol del Alumno</h3>
+        <p><strong>Nombre del Rol:</strong> {{ alumno.idRolNavigation.nombre }}</p>
+        <p><strong>Descripción del Rol:</strong> {{ alumno.idRolNavigation.descripcion }}</p>
+      </div>
+  
+      <!-- Cursos del Alumno -->
+      <!-- <div *ngIf="alumno.alumnosPorCurso.length > 0">
+        <h3>Cursos en los que está inscrito</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Nombre del Curso</th>
+              <th>Fecha de Alta</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let curso of alumno.alumnosPorCurso; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ curso.idCursoNavigation?.nombre }}</td>
+              <td>{{ curso.fechaAlta | date }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div> -->
+    </div>
+  </div>
+  
