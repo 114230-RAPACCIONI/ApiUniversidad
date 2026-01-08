@@ -3,11 +3,13 @@ using ApiUniversidad.Dtos;
 using ApiUniversidad.Interfaces.Services;
 using ApiUniversidad.Query;
 using ApiUniversidad.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiUniversidad.Controllers;
 
 [ApiController]
+[Authorize]
 public class AlumnoController : ControllerBase
 {
     private readonly IAlumnoService _alumnoService;
@@ -18,6 +20,7 @@ public class AlumnoController : ControllerBase
     }
 
     [HttpGet("/alumnos/getAllAlumnos")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> getAllAlumnos()
     {
         var alumnos = await _alumnoService.getAllAlumnos();
@@ -25,6 +28,7 @@ public class AlumnoController : ControllerBase
     }
     
     [HttpGet("/alumnos/getAlumnosById/{id}")]
+    [Authorize(Roles = "admin")]
     public async Task<IActionResult> getAlumnosById(Guid id)
     {
         var alumno = await _alumnoService.getAlumnoById(id);
@@ -32,18 +36,21 @@ public class AlumnoController : ControllerBase
     }
     
     [HttpPost("/alumno/crearAlumno")]
+    [Authorize(Roles = "admin")]
     public Task<ApiResponse<AlumnoDto>> crearAlumno([FromBody] NuevoAlumnoQuery nuevoAlumno)
     {
         return _alumnoService.createAlumno(nuevoAlumno);
     }
     
     [HttpPut("/alumno/updateAlumno/{id}")]
+    [Authorize(Roles = "admin,alumno")]
     public Task<ApiResponse<AlumnoDto>> updateAlumno(Guid id, [FromBody] NuevoAlumnoQuery nuevoAlumnoQuery)
     {
         return _alumnoService.updateAlumno(id, nuevoAlumnoQuery);
     }
 
     [HttpDelete("/alumno/deleteAlumno/{id}")]
+    [Authorize(Roles = "admin")]
     public Task<ApiResponse<HttpStatusCode>> deleteAlumno(Guid id)
     {
         return _alumnoService.deleteAlumno(id);

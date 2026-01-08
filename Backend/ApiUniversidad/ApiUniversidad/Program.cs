@@ -1,12 +1,16 @@
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using ApiUniversidad.Interfaces;
 using ApiUniversidad.Interfaces.Services;
 using ApiUniversidad.Mappings;
 using ApiUniversidad.Models;
 using ApiUniversidad.Repositories;
 using ApiUniversidad.Services.Alumno;
+using ApiUniversidad.Services.Curso;
+using ApiUniversidad.Services.Docente;
 using ApiUniversidad.Services.Rol;
+using ApiUniversidad.Services.Usuario;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -18,7 +22,7 @@ builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        options.JsonSerializerOptions.IgnoreNullValues = true;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
 
 // Add services to the container.
@@ -62,25 +66,31 @@ builder.Services.AddDbContext<UniversidadContext>(option =>
     option.UseNpgsql(builder.Configuration.GetConnectionString("ConexionDB"));
 });
 
-// // register services and repositories
-// builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
-// builder.Services.AddScoped<IUsuarioService, UsuarioService>();
-
+// register services and repositories
 builder.Services.AddScoped<IAlumnoRepository, AlumnoRepository>();
 builder.Services.AddScoped<IAlumnoService, AlumnoService>();
 
-// builder.Services.AddScoped<IDocenteRepository, DocenteRepository>();
-// builder.Services.AddScoped<IDocenteService, DocenteService>();
-
 builder.Services.AddScoped<IRoleRepository, RoleRepository>();
 builder.Services.AddScoped<IRoleService, RolService>();
+
+builder.Services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+
+builder.Services.AddScoped<IDocenteRepository, DocenteRepository>();
+builder.Services.AddScoped<IDocenteService, DocenteService>();
+
+builder.Services.AddScoped<ICursoRepository, CursoRepository>();
+builder.Services.AddScoped<ICursoService, CursoService>();
 
 // // configure AutoMapper
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 var key = builder.Configuration["JwtSettings:SecretKey"];
 
-var keyBytes = Encoding.UTF8.GetBytes(key);
+if (string.IsNullOrEmpty(key))
+{
+    throw new InvalidOperationException("JWT Secret Key no está configurada en appsettings.json");
+}
 //---------------------
 //Esto tambi�n es por la autenticacion
 
@@ -92,9 +102,18 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(key)),
             ValidateIssuer = false,
-            ValidateAudience = false
+            ValidateAudience = false,
+            RoleClaimType = "NombreRol"
         };
     });
+
+// Configurar autorización basada en roles
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("admin"));
+    options.AddPolicy("AdminOrDocente", policy => policy.RequireRole("admin", "docente"));
+    options.AddPolicy("AdminOrAlumno", policy => policy.RequireRole("admin", "alumno"));
+});
 
 builder.Services.AddCors(options =>
 {
@@ -106,8 +125,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Add controller
-builder.Services.AddControllers();
 
 
 var app = builder.Build();
@@ -125,13 +142,6 @@ if (app.Environment.IsDevelopment())
 
 // maneja las fechas 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior",true);
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
 
 app.UseHttpsRedirection();
 app.UseCors();

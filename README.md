@@ -1,98 +1,385 @@
-# Escolar
-## Aspectos a tener en cuenta para el backend
-#### 1. Autenticar usuarios con JWT, tener en cuenta que se deberá agregar al jwt como CLAIM todos sus datos incluido el nombre del rol.
-#### 2. Utilizar automapper
-#### 3. Crear DTOs
-#### 4. Crear repositorios (con sus respectivas interfaces)
-#### 5. Crear servicios (con sus respectivas interfaces)
-#### 6. Crear endpoints para ABM Cursos (rol admin)
-#### 7. Crear endpoints para ABM Alumnos (para alta y baja rol admin, update rol alumno)
-#### 8. Crear endpoints para ABM Docentes (para alta y baja rol admin, update rol docente)
-#### 9. Crear endpoint para Login usuario (sin auth)
-#### 10. Crear endpoint para obtener listado de alumnos por curso y alumno por id. (rol admin)
-#### 11. Crear endpoint para asignar docente a un curso (rol admin)
-#### 12. Crear endpoint para asignar alumno a curso (rol admin)
-#### 13. Crear endpoint para quitar alumno a un curso (rol admin)
-#### 14. Crear endpoint para quitar docente a un curso (rol admin)
+# API Universidad - Sistema de Gestión Escolar
 
+API REST desarrollada en ASP.NET Core 9.0 para la gestión de una universidad, incluyendo administración de alumnos, docentes, cursos y autenticación con JWT.
 
-## Modelos
-***Usuarios** -> admin, profesor, alumno*  
+## 📋 Requisitos Previos
 
-`Id – Guid`  
+- [.NET 9.0 SDK](https://dotnet.microsoft.com/download/dotnet/9.0)
+- [PostgreSQL](https://www.postgresql.org/download/) (versión 12 o superior)
+- IDE recomendado: Visual Studio, Visual Studio Code o JetBrains Rider
 
-`Email – string`  
+## 🚀 Instalación y Configuración
 
-`Contraseña – string`  
+### 1. Clonar el Repositorio
 
-`IdRol – Guid - FK`  
+```bash
+git clone <url-del-repositorio>
+cd ApiUniversidad
+```
 
-**Roles**  
+### 2. Configurar Base de Datos PostgreSQL
 
-`Id – Guid`  
+#### Crear Base de Datos
 
-`Nombre – string `  
+1. Abre PostgreSQL (pgAdmin o línea de comandos)
+2. Crea una nueva base de datos llamada `Universidad`:
 
-`Descripcion – string`  
+```sql
+CREATE DATABASE Universidad;
+```
 
-**Cursos**  
+#### Configurar Cadena de Conexión
 
-`Id – Guid`  
+Edita el archivo `Backend/ApiUniversidad/ApiUniversidad/appsettings.json` o `appsettings.Development.json`:
 
-`Nombre – string `  
+```json
+{
+  "ConnectionStrings": {
+    "ConexionDB": "Host=localhost;Database=Universidad;Port=5432;User Id=postgres;Password=TU_PASSWORD;"
+  }
+}
+```
 
-`FechaCreacion – datetime `  
+**Importante:** Reemplaza `TU_PASSWORD` con la contraseña de tu usuario de PostgreSQL.
 
-`Horarios – string`   
+### 3. Configuración Code First con Entity Framework
 
-`IdCarrera – Guid – FK`  
+El proyecto utiliza **Code First** para crear las tablas automáticamente desde los modelos.
 
-**Carreras**  
+#### Opción A: Usar Migraciones (Recomendado)
 
-`Id – Guid `  
+1. Abre una terminal en la carpeta del proyecto:
+```bash
+cd Backend/ApiUniversidad/ApiUniversidad
+```
 
-`Nombre -string`  
+2. Instala las herramientas de Entity Framework (si no están instaladas):
+```bash
+dotnet tool install --global dotnet-ef
+```
 
-**Docentes**  
+3. Crea la primera migración:
+```bash
+dotnet ef migrations add InitialCreate
+```
 
-`Id – Guid `  
+4. Aplica las migraciones a la base de datos:
+```bash
+dotnet ef database update
+```
 
-`Nombre – string `  
+#### Opción B: Crear Base de Datos al Iniciar (Solo Desarrollo)
 
-`Apellido – string `  
+Si prefieres que se cree automáticamente, puedes agregar al `Program.cs`:
 
-`Legajo – string `  
+```csharp
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<UniversidadContext>();
+    db.Database.EnsureCreated();
+}
+```
 
-`IdRol – Guid – FK`  
+**Nota:** Esto solo es recomendable para desarrollo. En producción, usa migraciones.
 
-**Alumnos**  
+### 4. Configurar JWT
 
-`Id – Guid `  
+El proyecto ya incluye una clave secreta JWT en `appsettings.json`. Para producción, genera una nueva clave segura:
 
-`Nombre – string `  
+```bash
+# Generar una clave secreta aleatoria (en Linux/Mac)
+openssl rand -base64 64
+```
 
-`Apellido – string `  
+Actualiza el valor en `appsettings.json`:
 
-`Legajo – string `  
+```json
+{
+  "JwtSettings": {
+    "SecretKey": "TU_CLAVE_SECRETA_AQUI"
+  }
+}
+```
 
-`IdRol – Guid – FK`  
+### 5. Restaurar Dependencias y Compilar
 
-**DocentesXcursos**  
+```bash
+cd Backend/ApiUniversidad/ApiUniversidad
+dotnet restore
+dotnet build
+```
 
-`Id – Guid`  
+### 6. Ejecutar la Aplicación
 
-`IdCurso – Guid – Fk `  
+```bash
+dotnet run
+```
 
-`IdDocente – Guid – Fk `  
+La API estará disponible en:
+- **HTTP:** `http://localhost:5000`
+- **HTTPS:** `https://localhost:5001`
+- **Swagger UI:** `http://localhost:5000` (en modo desarrollo)
 
-`FechaAlta – datetime`  
+## 📁 Estructura del Proyecto
 
-**AlumnosXCursos**  
+```
+Backend/ApiUniversidad/ApiUniversidad/
+├── Controllers/          # Controladores de la API
+│   ├── AlumnoController.cs
+│   ├── DocenteController.cs
+│   ├── CursoController.cs
+│   ├── LoginController.cs
+│   └── RoleController.cs
+├── Dtos/                 # Data Transfer Objects
+├── Interfaces/           # Interfaces de repositorios y servicios
+├── Mappings/             # Configuración de AutoMapper
+├── Models/               # Modelos de Entity Framework
+├── Query/                # Objetos para queries/comandos
+├── Repositories/         # Implementación de repositorios
+├── Response/             # Clases de respuesta API
+├── Services/             # Lógica de negocio
+├── Program.cs            # Punto de entrada de la aplicación
+└── appsettings.json      # Configuración
+```
 
-`Id – Guid`  
+## 🔐 Autenticación
 
-`IdCurso – Guid – Fk `  
+La API utiliza JWT (JSON Web Tokens) para autenticación. El endpoint de login está **público** (sin autenticación requerida).
 
-`IdAlumno – Guid – Fk `  
+### Endpoint de Login
 
-`FechaAlta – datetime`
+```http
+POST /login
+Content-Type: application/json
+
+{
+  "nombreUsuario": "usuario@email.com",
+  "email": "usuario@email.com"
+}
+```
+
+**Respuesta:**
+```json
+{
+  "success": true,
+  "data": {
+    "nombreUsuario": "usuario@email.com",
+    "email": "usuario@email.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
+}
+```
+
+### Uso del Token
+
+Incluye el token en el header `Authorization` de las peticiones:
+
+```http
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+El JWT incluye los siguientes claims:
+- `Id` - ID del usuario
+- `Email` - Email del usuario
+- `IdRol` - ID del rol
+- `NombreRol` - Nombre del rol (admin, docente, alumno)
+- `DescripcionRol` - Descripción del rol
+- `FechaAlta` - Fecha de alta del usuario
+
+## 📡 Endpoints Disponibles
+
+### Autenticación
+
+| Método | Endpoint | Auth | Rol |
+|--------|----------|------|-----|
+| POST | `/login` | ❌ | - |
+
+### Alumnos
+
+| Método | Endpoint | Auth | Rol |
+|--------|----------|------|-----|
+| GET | `/alumnos/getAllAlumnos` | ✅ | admin |
+| GET | `/alumnos/getAlumnosById/{id}` | ✅ | admin |
+| POST | `/alumno/crearAlumno` | ✅ | admin |
+| PUT | `/alumno/updateAlumno/{id}` | ✅ | admin, alumno |
+| DELETE | `/alumno/deleteAlumno/{id}` | ✅ | admin |
+
+### Docentes
+
+| Método | Endpoint | Auth | Rol |
+|--------|----------|------|-----|
+| GET | `/docentes/getAllDocentes` | ✅ | admin |
+| GET | `/docentes/getDocenteById/{id}` | ✅ | admin |
+| POST | `/docente/crearDocente` | ✅ | admin |
+| PUT | `/docente/updateDocente/{id}` | ✅ | admin, docente |
+| DELETE | `/docente/deleteDocente/{id}` | ✅ | admin |
+
+### Cursos
+
+| Método | Endpoint | Auth | Rol |
+|--------|----------|------|-----|
+| GET | `/cursos/getAllCursos` | ✅ | admin |
+| GET | `/cursos/getCursoById/{id}` | ✅ | admin |
+| POST | `/curso/crearCurso` | ✅ | admin |
+| PUT | `/curso/updateCurso/{id}` | ✅ | admin |
+| DELETE | `/curso/deleteCurso/{id}` | ✅ | admin |
+| GET | `/cursos/getAlumnosByCurso/{idCurso}` | ✅ | admin |
+
+### Asignaciones
+
+| Método | Endpoint | Auth | Rol |
+|--------|----------|------|-----|
+| POST | `/curso/asignarAlumno` | ✅ | admin |
+| DELETE | `/curso/quitarAlumno/{idCurso}/{idAlumno}` | ✅ | admin |
+| POST | `/curso/asignarDocente` | ✅ | admin |
+| DELETE | `/curso/quitarDocente/{idCurso}/{idDocente}` | ✅ | admin |
+
+### Roles
+
+| Método | Endpoint | Auth | Rol |
+|--------|----------|------|-----|
+| GET | `/getAllRoles` | ✅ | - |
+
+## 🗄️ Modelos de Base de Datos
+
+### Usuarios
+- `Id` - Guid
+- `Email` - string
+- `Contraseña` - string
+- `IdRol` - Guid (FK a Roles)
+- `FechaAlta` - DateTime
+
+### Roles
+- `Id` - Guid
+- `Nombre` - string (admin, docente, alumno)
+- `Descripcion` - string
+
+### Alumnos
+- `Id` - Guid
+- `Nombre` - string
+- `Apellido` - string
+- `Legajo` - string
+- `IdRol` - Guid (FK a Roles)
+- `FechaAlta` - DateTime
+
+### Docentes
+- `Id` - Guid
+- `Nombre` - string
+- `Apellido` - string
+- `Legajo` - string
+- `IdRol` - Guid (FK a Roles)
+- `FechaAlta` - DateTime
+
+### Cursos
+- `Id` - Guid
+- `Nombre` - string
+- `FechaCreacion` - DateTime
+- `Horarios` - string
+- `IdCarrera` - Guid (FK a CarrerasUniversidad)
+
+### CarrerasUniversidad
+- `Id` - Guid
+- `Nombre` - string
+
+### DocentesPorCurso
+- `Id` - Guid
+- `IdCurso` - Guid (FK a Cursos)
+- `IdDocente` - Guid (FK a Docentes)
+- `FechaAlta` - DateTime
+
+### AlumnosPorCurso
+- `Id` - Guid
+- `IdCurso` - Guid (FK a Cursos)
+- `IdAlumno` - Guid (FK a Alumnos)
+- `FechaAlta` - DateTime
+
+## 🛠️ Tecnologías Utilizadas
+
+- **ASP.NET Core 9.0** - Framework web
+- **Entity Framework Core 9.0** - ORM para acceso a datos
+- **PostgreSQL** - Base de datos
+- **JWT Bearer** - Autenticación
+- **AutoMapper** - Mapeo de objetos
+- **Swagger/OpenAPI** - Documentación de API
+
+## 📝 Aspectos Técnicos Implementados
+
+✅ Autenticación con JWT (incluye todos los datos del usuario y rol como claims)  
+✅ AutoMapper para mapeo de DTOs  
+✅ Arquitectura en capas (Controllers → Services → Repositories)  
+✅ DTOs para transferencia de datos  
+✅ Repositorios con interfaces  
+✅ Servicios con interfaces  
+✅ Code First con Entity Framework  
+✅ Autorización basada en roles  
+✅ Validaciones y manejo de errores  
+
+## 🔧 Comandos Útiles
+
+### Crear una nueva migración
+```bash
+dotnet ef migrations add NombreMigracion
+```
+
+### Aplicar migraciones pendientes
+```bash
+dotnet ef database update
+```
+
+### Revertir última migración
+```bash
+dotnet ef database update NombreMigracionAnterior
+```
+
+### Eliminar última migración (sin aplicarla)
+```bash
+dotnet ef migrations remove
+```
+
+### Ver el script SQL de una migración
+```bash
+dotnet ef migrations script
+```
+
+## 📚 Documentación API
+
+Cuando la aplicación está en ejecución, puedes acceder a la documentación interactiva de Swagger en:
+- **Desarrollo:** `http://localhost:5000` o `https://localhost:5001`
+
+Desde Swagger puedes:
+- Ver todos los endpoints disponibles
+- Probar los endpoints directamente
+- Ver los modelos de datos
+- Autenticarte y probar endpoints protegidos
+
+## ⚠️ Notas Importantes
+
+1. **Base de Datos:** Asegúrate de que PostgreSQL esté corriendo antes de ejecutar la aplicación.
+2. **JWT Secret Key:** Cambia la clave secreta JWT en producción por una más segura.
+3. **Conexión DB:** La cadena de conexión en `appsettings.json` contiene credenciales por defecto. Cámbialas según tu configuración.
+4. **Migraciones:** En producción, usa migraciones en lugar de `EnsureCreated()`.
+5. **CORS:** La configuración actual permite cualquier origen. Restringe esto en producción.
+
+## 🐛 Troubleshooting
+
+### Error: "No connection could be made because the target machine actively refused it"
+- Verifica que PostgreSQL esté corriendo
+- Revisa la cadena de conexión en `appsettings.json`
+
+### Error: "JWT Secret Key no está configurada"
+- Verifica que `JwtSettings:SecretKey` esté en `appsettings.json`
+
+### Error: "relation does not exist"
+- Aplica las migraciones: `dotnet ef database update`
+
+### Error: "Authentication failed"
+- Verifica que el usuario y contraseña de PostgreSQL sean correctos
+- Verifica que la base de datos exista
+
+## 📄 Licencia
+
+Este proyecto es de código abierto y está disponible bajo la licencia MIT.
+
+## 👥 Autor
+
+Desarrollado para la gestión de universidad.

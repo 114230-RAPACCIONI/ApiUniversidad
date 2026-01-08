@@ -20,13 +20,7 @@
 /Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/ApiUniversidad.sourcelink.json
 /Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/staticwebassets.build.json
 /Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/staticwebassets.development.json
-/Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/staticwebassets/msbuild.ApiUniversidad.Microsoft.AspNetCore.StaticWebAssets.props
-/Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/staticwebassets/msbuild.build.ApiUniversidad.props
-/Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/staticwebassets/msbuild.buildMultiTargeting.ApiUniversidad.props
-/Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/staticwebassets/msbuild.buildTransitive.ApiUniversidad.props
-/Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/staticwebassets.pack.json
 /Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/scopedcss/bundle/ApiUniversidad.styles.css
-/Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/ApiUniversidad.csproj.CopyComplete
 /Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/ApiUniversidad.dll
 /Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/refint/ApiUniversidad.dll
 /Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/ApiUniversidad.pdb
@@ -62,7 +56,6 @@
 /Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/bin/Debug/net8.0/System.Composition.Runtime.dll
 /Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/bin/Debug/net8.0/System.Composition.TypedParts.dll
 /Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/bin/Debug/net8.0/System.IdentityModel.Tokens.Jwt.dll
-/Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/bin/Debug/net8.0/System.Text.Json.dll
 /Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/bin/Debug/net8.0/cs/Microsoft.CodeAnalysis.resources.dll
 /Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/bin/Debug/net8.0/de/Microsoft.CodeAnalysis.resources.dll
 /Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/bin/Debug/net8.0/es/Microsoft.CodeAnalysis.resources.dll
@@ -115,3 +108,11 @@
 /Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/bin/Debug/net8.0/tr/Microsoft.CodeAnalysis.Workspaces.resources.dll
 /Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/bin/Debug/net8.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.resources.dll
 /Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/bin/Debug/net8.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll
+/Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/bin/Debug/net8.0/ApiUniversidad.staticwebassets.endpoints.json
+/Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/rpswa.dswa.cache.json
+/Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/rjimswa.dswa.cache.json
+/Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/rjsmrazor.dswa.cache.json
+/Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/rjsmcshtml.dswa.cache.json
+/Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/staticwebassets.build.json.cache
+/Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/staticwebassets.build.endpoints.json
+/Users/tomi/Desktop/GitHub/ApiUniversidad/Backend/ApiUniversidad/ApiUniversidad/obj/Debug/net8.0/ApiUnive.1A530976.Up2Date

@@ -19,16 +19,18 @@ public class MappingProfile : Profile
         
         CreateMap<NuevoDocenteQuery, Docente>().ReverseMap();
         
-        CreateMap<AlumnosPorCurso, AlumnosPorCursoDto>()
-            .ForMember(x=> x.IdAlumno,
-                opt => opt.MapFrom(
-                    src => src.IdAlumnoNavigation.AlumnosPorCursos.Count()))
-            .ForMember(x=> x.IdAlumno,
-                opt => opt.MapFrom(
-                    src => src.IdAlumnoNavigation.Nombre))
+        CreateMap<AlumnosPorCurso, AlumnosPorCursoDto>().ReverseMap();
+        
+        CreateMap<DocentesPorCurso, DocentesPorCursoDto>().ReverseMap();
+        
+        CreateMap<Curso, CursoDto>()
+            .ForMember(dest => dest.NombreCarrera, opt => opt.MapFrom(src => src.IdCarreraNavigation.Nombre))
             .ReverseMap();
         
-        // CreateMap<DocentesPorCurso, Docen>()
+        CreateMap<NuevoCursoQuery, Curso>().ReverseMap();
+        
+        CreateMap<CarrerasUniversidad, CarreraDto>().ReverseMap();
+        
         CreateMap<Role, RoleDto>().ReverseMap();
     }
     

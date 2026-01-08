@@ -20,17 +20,14 @@ export class RolesListComponent implements OnInit{
   }
 
   getRoles(): void {
-    this.rolService.getRoles().subscribe((data: Rol[]) => {
-      this.rolService.getRoles().subscribe({
-        next: (response: any) => {
-          console.log('Datos recibidos:', response); 
-          this.roles = response.data || [];
-        },
-        error: (err) => {
-          console.error('Error fetching alumnos', err);
-          this.roles = []; 
-        }
-      });
+    this.rolService.getRoles().subscribe({
+      next: (response) => {
+        this.roles = response.data || [];
+      },
+      error: (err) => {
+        console.error('Error fetching roles', err);
+        this.roles = [];
+      }
     });
   }
 

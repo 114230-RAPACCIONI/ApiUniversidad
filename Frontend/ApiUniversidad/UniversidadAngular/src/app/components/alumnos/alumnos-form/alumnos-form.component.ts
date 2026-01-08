@@ -1,16 +1,15 @@
-import { Component, inject, NgModule, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { Alumno } from '../../../models/alumno';
 import { AlumnosService } from '../../../services/alumnos.service';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
-import { Subscriber, Subscription } from 'rxjs';
 import { NuevoAlumno } from '../../../models/nuevoAlumno';
 
 @Component({
   selector: 'app-alumnos-form',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, RouterModule],
   templateUrl: './alumnos-form.component.html',
   styleUrl: './alumnos-form.component.css'
 })
@@ -25,7 +24,6 @@ export class AlumnosFormComponent implements OnInit {
   };
 
   isEdit: boolean = false;
-  private subscription = new Subscription();
 
   private readonly alumnoService = inject(AlumnosService);
   private readonly router = inject(Router)
@@ -35,45 +33,62 @@ export class AlumnosFormComponent implements OnInit {
     const id = this.activateRouter.snapshot.paramMap.get('id');
     if (id) {
       this.getById(id);
-    } else {
-      console.error('ID is undefined');
     }
   }
 
   getById(id: string): void {
-  this.alumnoService.getAlumnoById(id).subscribe(
-    (response) => {
-      this.alumno = response;
-    },
-    (error) => {
-      console.error('Error fetching alumno', error);
+    this.isEdit = true;
+    this.alumnoService.getAlumnoById(id).subscribe({
+      next: (response) => {
+        if (response.data) {
+          this.alumno = {
+            id: response.data.id,
+            nombre: response.data.nombre,
+            apellido: response.data.apellido,
+            legajo: response.data.legajo,
+            idRol: response.data.role?.id || response.data.idRol || '',
+            fechaAlta: response.data.fechaAlta
+          };
+        }
+      },
+      error: (error) => {
+        console.error('Error fetching alumno', error);
+      }
+    });
+  }
+
+  sendForm(form: NgForm) {
+    if (form.valid) {
+      if (this.isEdit && this.alumno.id) {
+        this.alumnoService.updateAlumno(this.alumno.id, this.alumno).subscribe({
+          next: (response) => {
+            if (response.success) {
+              alert("Alumno actualizado correctamente");
+              this.router.navigate(['list']);
+            }
+          },
+          error: (err) => {
+            console.error('Error actualizando alumno', err);
+            alert("Error al actualizar el alumno");
+          }
+        });
+      } else {
+        this.alumno.id = crypto.randomUUID();
+        this.alumnoService.createAlumno(this.alumno).subscribe({
+          next: (response) => {
+            if (response.success) {
+              alert("Alumno creado correctamente");
+              this.router.navigate(['list']);
+            }
+          },
+          error: (err) => {
+            console.error('Error creando alumno', err);
+            alert("Error al crear el alumno");
+          }
+        });
+      }
+      form.resetForm();
     }
-  );
-}
-
-//   sendForm(form: NgForm) {
-//     if (form.valid) {
-//       if (this.isEdit) {
-//         this.subscription.add(
-//         this.alumnoService.updateAlumno(this.alumno).subscribe({
-//           next: (data) => alert("Alumno actualizado correctamente" + data.id),
-//           error: (errr) => alert("Error al actualizar el alumno."),
-//           complete: () => this.router.navigate(['list'])
-//         }))
-//       } else {
-//         this.subscription.add(
-//         this.alumnoService.createAlumno(this.alumno).subscribe({
-//           next: (data) => alert("Alumno creado correctamente" + data.id),
-//           error: (errr) => alert("Error al crear el alumno."),
-//          complete: () => this.router.navigate(['list'])
-//         }))
-//       }
-
-//       form.resetForm();
-//       this.alumno = new Alumno();
-//       console.log(this.alumno);
-//     }
-//   }
-
+  }
 
 }

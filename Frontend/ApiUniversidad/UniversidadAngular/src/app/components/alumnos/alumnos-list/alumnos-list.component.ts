@@ -23,28 +23,30 @@ export class AlumnosListComponent implements OnInit {
 
   // obtenemos los alumnos del servicio
   getAlumnos() {
-    this.alumnoService.getAllAlumnos().subscribe((data: Alumno[]) => {
-      this.alumnoService.getAllAlumnos().subscribe({
-        next: (response: any) => {
-          console.log('Datos recibidos:', response);  // Verificar estructura
-          this.alumnos = response.data || [];  // Asegúrate de que sea un array
-        },
-        error: (err) => {
-          console.error('Error fetching alumnos', err);
-          this.alumnos = [];  // Manejar el caso de error
-        }
-      });
+    this.alumnoService.getAllAlumnos().subscribe({
+      next: (response) => {
+        this.alumnos = response.data || [];
+      },
+      error: (err) => {
+        console.error('Error fetching alumnos', err);
+        this.alumnos = [];
+      }
     });
   }
 
 
   // eliminamos el alumno
   eliminarAlumno(id?: string) {
-
     if (id == null) return;
-    this.alumnoService.deleteAlumno(id).subscribe((data) => {
-      alert("Alumno eliminado: " + data.nombre);
-      this.getAlumnos();
+    this.alumnoService.deleteAlumno(id).subscribe({
+      next: (response) => {
+        alert("Alumno eliminado correctamente");
+        this.getAlumnos();
+      },
+      error: (err) => {
+        console.error('Error eliminando alumno', err);
+        alert("Error al eliminar el alumno");
+      }
     });
   }
 
